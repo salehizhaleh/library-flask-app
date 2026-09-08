@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>My Library</title>
+    <style>
+      body { font-family: Arial; margin: 20px; }
+      table { border-collapse: collapse; width: 100%; }
+      th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+      th { background-color: #4CAF50; color: white; }
+      a { margin: 10px 5px 0 0; display: inline-block; }
+      img { max-width: 100px; }
+      .search-box { margin: 20px 0; }
+      input[type="text"] { padding: 8px; width: 300px; }
+      button { padding: 8px 15px; background-color: #4CAF50; color: white; border: none; cursor: pointer; }
+      button:hover { background-color: #45a049; }
+      .delete-btn { background-color: #f44336; }
+      .delete-btn:hover { background-color: #da190b; }
+    </style>
+  </head>
+  <body>
+
+    <h1>📚 My Library</h1>
+
+    <div>
+      <a href="/add_author">Add Author</a>
+      <a href="/add_book">Add Book</a>
+    </div>
+
+    <div class="search-box">
+      <form method="GET" action="/">
+        <input type="text" name="search" placeholder="Search books...">
+        <button type="submit">Search</button>
+      </form>
+    </div>
+
+    <div>
+      <a href="/?sort_by=title">Sort by Title</a>
+      <a href="/?sort_by=author">Sort by Author</a>
+    </div>
+
+    {% if books %}
+    <table>
+      <tr>
+        <th>Cover</th>
+        <th>Title</th>
+        <th>Author</th>
+        <th>ISBN</th>
+        <th>Publication Year</th>
+        <th>Action</th>
+      </tr>
+      {% for book in books %}
+      <tr>
+        <td><img src="https://covers.openlibrary.org/b/isbn/{{ book.isbn }}-M.jpg" alt="Cover"></td>
+        <td>{{ book.title }}</td>
+        <td>{{ book.author.name if book.author else 'Unknown' }}</td>
+        <td>{{ book.isbn }}</td>
+        <td>{{ book.publication_year }}</td>
+        <td>
+          <form method="POST" action="/book/{{ book.id }}/delete" style="display:inline;">
+            <button type="submit" class="delete-btn">Delete</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </table>
+    {% else %}
+    <p>No books found.</p>
+    {% endif %}
+
+  </body>
+</html>
