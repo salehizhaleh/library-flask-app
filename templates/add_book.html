@@ -1,33 +1,97 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  </head>
-  <body>
+    <title>Add Book</title>
+    <style>
+        body {
+            font-family: Arial;
+            margin: 20px;
+        }
+        form {
+            max-width: 500px;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        input, select {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+        a {
+            display: inline-block;
+            margin-top: 20px;
+            color: #2196F3;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
 
-  <form action="/add_book" method="POST">
+    <h1>Add Book</h1>
 
-  <label for="isbn">ISBN:</label>
-  <input type="text" id="isbn" name="isbn" required><br><br>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div style="padding: 10px; margin: 10px 0; border-radius: 4px;
+                    {% if category == 'success' %}
+                        background-color: #d4edda; color: #155724;
+                    {% elif category == 'warning' %}
+                        background-color: #fff3cd; color: #856404;
+                    {% else %}
+                        background-color: #f8d7da; color: #721c24;
+                    {% endif %}
+                ">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
 
-  <label for="title">Title:</label>
-  <input type="text" id="title" name="title" required><br><br>
+    <form action="/add_book" method="POST">
 
-  <label for="publication_year">Publication Year:</label>
-  <input type="number" id="publication_year" name="publication_year"><br><br>
+        <label for="isbn">ISBN:</label>
+        <input type="text" id="isbn" name="isbn" required>
 
-  <label for="author_id">Author:</label>
-  <select id="author_id" name="author_id" required>
-    <option value="">-- Select Author --</option>
-    {% for author in authors %}
-    <option value="{{ author.id }}">{{ author.name }}</option>
-    {% endfor %}
-  </select><br><br>
+        <label for="title">Title:</label>
+        <input type="text" id="title" name="title" required>
 
-  <input type="submit" value="Add Book">
-  </form>
+        <label for="publication_year">Publication Year:</label>
+        <input type="number" id="publication_year" name="publication_year" required>
 
-  </body>
+        <label for="author_id">Author:</label>
+        <select id="author_id" name="author_id" required>
+            <option value="">-- Select Author --</option>
+            {% for author in authors %}
+                <option value="{{ author.id }}">{{ author.name }}</option>
+            {% endfor %}
+        </select>
+
+        <input type="submit" value="Add Book">
+
+    </form>
+
+    <a href="/">Back to Home</a>
+
+</body>
 </html>

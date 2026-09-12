@@ -1,24 +1,89 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  </head>
-  <body>
+    <title>Add Author</title>
+    <style>
+        body {
+            font-family: Arial;
+            margin: 20px;
+        }
+        form {
+            max-width: 500px;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        input, select {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+        a {
+            display: inline-block;
+            margin-top: 20px;
+            color: #2196F3;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
 
-  <form action="/add_author" method="POST">
-  <label for="name">Author Name:</label>
-  <input type="text" id="name" name="name" required><br><br>
+    <h1>Add Author</h1>
 
-  <label for="birth_date">Birthdate:</label>
-  <input type="date" id="birth_date" name="birth_date" required><br><br>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div style="padding: 10px; margin: 10px 0; border-radius: 4px;
+                    {% if category == 'success' %}
+                        background-color: #d4edda; color: #155724;
+                    {% elif category == 'warning' %}
+                        background-color: #fff3cd; color: #856404;
+                    {% else %}
+                        background-color: #f8d7da; color: #721c24;
+                    {% endif %}
+                ">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
 
-  <label for="date_of_death">Date of Death:</label>
-  <input type="date" id="date_of_death" name="date_of_death"><br><br>
+    <form action="/add_author" method="POST">
 
-  <input type="submit" value="Add Author">
-  </form>
+        <label for="name">Author Name:</label>
+        <input type="text" id="name" name="name" required>
 
-  </body>
+        <label for="birth_date">Birth Date:</label>
+        <input type="date" id="birth_date" name="birth_date">
+
+        <label for="date_of_death">Date of Death:</label>
+        <input type="date" id="date_of_death" name="date_of_death">
+
+        <input type="submit" value="Add Author">
+
+    </form>
+
+    <a href="/">Back to Home</a>
+
+</body>
 </html>

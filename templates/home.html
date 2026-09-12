@@ -1,74 +1,244 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>My Library</title>
     <style>
-      body { font-family: Arial; margin: 20px; }
-      table { border-collapse: collapse; width: 100%; }
-      th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
-      th { background-color: #4CAF50; color: white; }
-      a { margin: 10px 5px 0 0; display: inline-block; }
-      img { max-width: 100px; }
-      .search-box { margin: 20px 0; }
-      input[type="text"] { padding: 8px; width: 300px; }
-      button { padding: 8px 15px; background-color: #4CAF50; color: white; border: none; cursor: pointer; }
-      button:hover { background-color: #45a049; }
-      .delete-btn { background-color: #f44336; }
-      .delete-btn:hover { background-color: #da190b; }
-    </style>
-  </head>
-  <body>
+        body {
+            font-family: Arial;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
 
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+
+        .flash-messages {
+            margin: 20px 0;
+        }
+
+        .alert {
+            padding: 12px 20px;
+            margin: 10px 0;
+            border-radius: 4px;
+            border-left: 4px solid;
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border-color: #28a745;
+        }
+
+        .alert-warning {
+            background-color: #fff3cd;
+            color: #856404;
+            border-color: #ffc107;
+        }
+
+        .alert-error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border-color: #f5c6cb;
+        }
+
+        .btn-group {
+            margin: 20px 0;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+            text-decoration: none;
+            display: inline-block;
+            transition: background-color 0.3s;
+        }
+
+        .btn:hover {
+            background-color: #45a049;
+        }
+
+        .btn-primary {
+            background-color: #2196F3;
+        }
+
+        .btn-primary:hover {
+            background-color: #0b7dda;
+        }
+
+        .search-box {
+            margin: 20px 0;
+            display: flex;
+            gap: 10px;
+        }
+
+        .search-box input[type="text"] {
+            padding: 10px;
+            width: 300px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .sort-buttons {
+            margin: 20px 0;
+            display: flex;
+            gap: 10px;
+        }
+
+        .sort-buttons a {
+            padding: 10px 20px;
+            background-color: #2196F3;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+
+        .sort-buttons a:hover {
+            background-color: #0b7dda;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #4CAF50;
+            color: white;
+            font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tr:hover {
+            background-color: #f0f0f0;
+        }
+
+        img {
+            max-width: 80px;
+            border-radius: 4px;
+        }
+
+        .delete-btn {
+            background-color: #f44336;
+            padding: 8px 15px;
+            margin: 0;
+        }
+
+        .delete-btn:hover {
+            background-color: #da190b;
+        }
+
+        .no-books {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
     <h1>📚 My Library</h1>
 
-    <div>
-      <a href="/add_author">Add Author</a>
-      <a href="/add_book">Add Book</a>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="flash-messages">
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <div class="btn-group">
+        <a href="/add_author" class="btn btn-primary">Add Author</a>
+        <a href="/add_book" class="btn btn-primary">Add Book</a>
     </div>
 
     <div class="search-box">
-      <form method="GET" action="/">
-        <input type="text" name="search" placeholder="Search books...">
-        <button type="submit">Search</button>
-      </form>
+        <form method="GET" action="/" style="display: flex; gap: 10px; width: 100%;">
+            <input type="text" name="search" placeholder="Search books or authors..." value="{{ search_query }}">
+            <button type="submit" class="btn">Search</button>
+        </form>
     </div>
 
-    <div>
-      <a href="/?sort_by=title">Sort by Title</a>
-      <a href="/?sort_by=author">Sort by Author</a>
+    <div class="sort-buttons">
+        <a href="/?sort_by=title">Sort by Title</a>
+        <a href="/?sort_by=author">Sort by Author</a>
     </div>
 
     {% if books %}
-    <table>
-      <tr>
-        <th>Cover</th>
-        <th>Title</th>
-        <th>Author</th>
-        <th>ISBN</th>
-        <th>Publication Year</th>
-        <th>Action</th>
-      </tr>
-      {% for book in books %}
-      <tr>
-        <td><img src="https://covers.openlibrary.org/b/isbn/{{ book.isbn }}-M.jpg" alt="Cover"></td>
-        <td>{{ book.title }}</td>
-        <td>{{ book.author.name if book.author else 'Unknown' }}</td>
-        <td>{{ book.isbn }}</td>
-        <td>{{ book.publication_year }}</td>
-        <td>
-          <form method="POST" action="/book/{{ book.id }}/delete" style="display:inline;">
-            <button type="submit" class="delete-btn">Delete</button>
-          </form>
-        </td>
-      </tr>
-      {% endfor %}
-    </table>
+        <table>
+            <tr>
+                <th>Cover</th>
+                <th>Title</th>
+                <th>Author</th>
+                <th>ISBN</th>
+                <th>Publication Year</th>
+                <th>Action</th>
+            </tr>
+            {% for book in books %}
+                <tr>
+                    <td>
+                        <img src="https://covers.openlibrary.org/b/isbn/{{ book.isbn }}-M.jpg"
+                             alt="Cover"
+                             onerror="this.src='https://via.placeholder.com/80x120?text=No+Cover'">
+                    </td>
+                    <td>{{ book.title }}</td>
+                    <td>{{ book.author.name if book.author else 'Unknown' }}</td>
+                    <td>{{ book.isbn }}</td>
+                    <td>{{ book.publication_year }}</td>
+                    <td>
+                        <form method="POST" action="/book/{{ book.id }}/delete" style="display: inline;">
+                            <button type="submit" class="btn delete-btn" onclick="return confirm('Are you sure?')">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
     {% else %}
-    <p>No books found.</p>
+        <div class="no-books">
+            <p>No books found.</p>
+        </div>
     {% endif %}
 
-  </body>
+</div>
+
+</body>
 </html>
